@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import model.Categoria;
 import model.Producto;
@@ -23,6 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
+import javax.swing.JTable;
 
 public class FrmManteProd extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -36,6 +38,9 @@ public class FrmManteProd extends JFrame {
 	private JTextField txtDescripcion;
 	private JTextField txtStock;
 	private JTextField txtPrecio;
+	private JTable tblSalida;
+	
+	DefaultTableModel modelo = new DefaultTableModel();
 
 	/**
 	 * Launch the application.
@@ -59,7 +64,7 @@ public class FrmManteProd extends JFrame {
 	public FrmManteProd() {
 		setTitle("Mantenimiento de Productos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 390);
+		setBounds(100, 100, 450, 750);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -87,7 +92,7 @@ public class FrmManteProd extends JFrame {
 				listado();
 			}
 		});
-		btnListado.setBounds(177, 322, 89, 23);
+		btnListado.setBounds(177, 677, 89, 23);
 		contentPane.add(btnListado);
 
 		txtCodigo = new JTextField();
@@ -150,6 +155,20 @@ public class FrmManteProd extends JFrame {
 		});
 		btnBuscar.setBounds(324, 63, 89, 23);
 		contentPane.add(btnBuscar);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 325, 414, 341);
+		contentPane.add(scrollPane_1);
+		
+		tblSalida = new JTable();
+		scrollPane_1.setViewportView(tblSalida);
+		tblSalida.setModel(modelo);
+		modelo.addColumn("Código");
+		modelo.addColumn("Producto");
+		modelo.addColumn("Stock");
+		modelo.addColumn("Precio");
+		modelo.addColumn("Categoria");
+		modelo.addColumn("Proveedor");
 
 		llenaComboCategoria();
 		llenaComboProveedor();
@@ -218,6 +237,15 @@ public class FrmManteProd extends JFrame {
 			imprimir("Categoria   : " + p.getIdcategoria() + "-" + p.getObjCategoria().getDescripcion());
 			imprimir("Id Proveedor : " + p.getIdproveedor() + "-" + p.getObjProveedor().getNombre());
 			imprimir("******************************************************");
+			Object datos[] = {
+					p.getIdprod(),
+					p.getDescripcion(),
+					p.getStock(),
+					p.getPrecio(),
+					p.getIdcategoria() + "-" + p.getObjCategoria().getDescripcion(),
+					p.getIdproveedor() + "-" + p.getObjProveedor().getNombre()
+			};
+			modelo.addRow(datos);
 		}
 		em.close();
 	}
